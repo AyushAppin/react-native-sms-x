@@ -30,16 +30,16 @@ public class SendSMS extends ReactContextBaseJavaModule {
         return "SendSMS";
     }
 
-    private void sendCallback(Integer messageId, String message){
+    private void sendCallback(String message){
         if (callback != null) {
-            callback.invoke(messageId, message);
+            callback.invoke(message);
             callback = null;
         }
     }
 
     //---sends an SMS message to another device---
     @ReactMethod
-    public void send(final Integer messageId, String phoneNumber, String message, final Callback cb ){
+    public void send(String phoneNumber, String message, final Callback cb){
 
         try{
 
@@ -60,19 +60,19 @@ public class SendSMS extends ReactContextBaseJavaModule {
                     switch (getResultCode())
                     {
                         case Activity.RESULT_OK:
-                            sendCallback(messageId, "SMS sent");
+                            sendCallback("SENT");
                             break;
                         case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                            sendCallback(messageId, "Generic failure");
+                            sendCallback("Generic failure");
                             break;
                         case SmsManager.RESULT_ERROR_NO_SERVICE:
-                            sendCallback(messageId, "No service");
+                            sendCallback("No service");
                             break;
                         case SmsManager.RESULT_ERROR_NULL_PDU:
-                            sendCallback(messageId, "Null PDU");
+                            sendCallback("Null PDU");
                             break;
                         case SmsManager.RESULT_ERROR_RADIO_OFF:
-                            sendCallback(messageId, "Radio off");
+                            sendCallback("Radio off");
                             break;
                     }
                 }
@@ -85,12 +85,12 @@ public class SendSMS extends ReactContextBaseJavaModule {
                     switch (getResultCode())
                     {
                         case Activity.RESULT_OK:
-                            System.out.println("SMS delivered");
-                            sendCallback(messageId, "SMS delivered");
+                            System.out.println("SENT");
+                            sendCallback("SMS delivered");
                             break;
                         case Activity.RESULT_CANCELED:
                             System.out.println("SMS not delivered");
-                            sendCallback(messageId, "SMS not delivered");
+                            sendCallback("SMS not delivered");
                             break;
                     }
                 }
@@ -101,7 +101,7 @@ public class SendSMS extends ReactContextBaseJavaModule {
 
         }catch (Exception e) {
 
-            sendCallback(messageId, "Unknown error");
+            sendCallback("Unknown error");
             throw e;
 
         }
